@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mensagens</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style-mensagem.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+
+    <center><h2 >Mensagens</h2></center>
+
+    <div id="res">
+        
+    </div>
+    
+
+    <form method="POST" action="/enviar_mensagem" onsubmit="event.preventDefault(); enviarMensagem();">
+        <label for="destinatario" class="align">Destinatário:</label><br>
+        <select name="usuario" id="usuario">
+            {% for contato in contatos %}
+                <option value="{{ contato.telefone }}">{{ contato.nome }}</option>
+            {% endfor %}
+        </select><br>
+        <p ><label class="align">Mensagem:</label>
+            
+        </p>
+        <div class="mensagem"><input id="mensagem" name="mensagem"></input></div><br>
+        <br><br>
+        <center><input type="submit" value="Enviar"></center>
+    </form>
+    <center></center>
+    <ul id="mensagens">
+        {% for mensagem in mensagens %}
+            <li>{{ mensagem.remetente }}: {{ mensagem.mensagem }}</li>
+        {% endfor %}
+    </ul>
+
+
+
+
+    
+
+
+
+
+    
+
+    <script type="text/javascript">
+        function mostraUsuarios(){
+            // requisição via ajax
+            $.ajax({
+                url: "/get/usuarios",
+                type: "GET",
+                success: function(contatos){
+                    for (let i = 0; i < contatos.length; i++) {
+                        let tag = '<option value="' + contatos[i]['telefone'] + '">' + contatos[i]['nome'] + '</option>';
+                        $("#usuario").append(tag);
+                    }
+                }
+            });
+        }
+    
+        $(document).ready(mostraUsuarios());
+    </script>
+
+
+    <script type="text/javascript">
+        function mostraMensagens(){
+            // requisição via ajax
+            $.ajax({
+                url: "/get/mensagens/" + $("#usuario").val(),
+                type: "GET",
+                success: function (mensagens){
+                    $("#res").empty()
+                    for (let i = 0; i < mensagens.length; i++) {
+                        let tag = '<li>' + mensagens[i]["remetente"] + ': ' + mensagens[i]["mensagem"] + '</li>';
+                        $("#res").append(tag);
+                    }
+                }
+            });
+        }
+
+        setInterval(mostraMensagens, 5000);
+    </script>
+
+<script type="text/javascript">
+    function enviarMensagem() {
+        // Coletar os dados do formulário
+        var telefoneDestinatario = document.getElementById("usuario").value;
+        var mensagem = document.getElementById("mensagem").value;
+
+        // Montar o objeto com os dados da mensagem
+        var dadosMensagem = {
+            "telefone_destinatario": telefoneDestinatario,
+            "mensagem": mensagem
+        };
+
+        // Montar a requisição AJAX
+        $.ajax({
+            url: "/enviar_mensagem", // URL da rota Flask que processará a mensagem
+            type: "POST", // Método de envio
+            contentType: "application/json", // Tipo de dado enviado (JSON)
+            data: JSON.stringify(dadosMensagem), // Converter objeto em JSON
+            success: function(response) { // Função executada em caso de sucesso
+                // Atualizar as mensagens na tela (chame a função apropriada aqui)
+                mostraMensagens();
+            },
+            error: function(xhr, status, error) { // Função executada em caso de erro
+                // Emitir um alerta informando erro ao enviar a mensagem
+                alert("Erro ao enviar a mensagem: " + error);
+            }
+        });
+    }
+</script>
+
+
+    
+</body>
+</html>

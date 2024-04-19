@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro e Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style-cadastro.css') }}">
+</head>
+<body>
+        <h1>Bem-vindo ao Crabizap</h1>
+        {% if mensagem %}
+            <p>{{ mensagem }}</p>
+        {% endif %}
+        <h1>Cadastro</h1>
+        <form action="/cadastro" method="post">
+            <label for="telefone">Telefone:</label><br>
+            <input type="text" id="telefone" name="telefone"><br>
+            <label for="nome">Nome:</label><br>
+            <input type="text" id="nome" name="nome"><br>
+            <label for="senha">Senha:</label><br>
+            <input type="password" id="senha" name="senha"><br><br>
+            <button type="submit">Cadastrar</button>
+        </form>
+        
+
+
+
+    <h2>Login</h2>
+    <form method="POST" action="/login">
+        <label for="telefone">Telefone:</label><br>
+        <input type="text" id="telefone" name="telefone"><br>
+        <label for="senha">Senha:</label><br>
+        <input type="password" id="senha" name="senha"><br><br>
+        <input type="submit" value="Login">
+    </form>
+    {% if mensagem %}
+        <p>{{ mensagem }}</p>
+    {% endif %}
+  
+
+
+
+
+
+
+
+</body>
+</html>

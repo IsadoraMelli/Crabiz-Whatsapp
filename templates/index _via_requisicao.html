@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- import JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    
+    <title>Cadastro e Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style-cadastro.css') }}">
+
+
+    
+</head>
+<body>
+        <h3 id="resultado"></h3>
+        <h1>Bem-vindo ao Crabizap</h1>
+        {% if mensagem %}
+            <p>{{ mensagem }}</p>
+        {% endif %}
+        <h1>Cadastro</h1>
+        <form>
+            <label for="telefone">Telefone:</label><br>
+            <input type="text" id="telefone" name="telefone"><br>
+            <label for="nome">Nome:</label><br>
+            <input type="text" id="nome" name="nome"><br>
+            <label for="senha">Senha:</label><br>
+            <input type="password" id="senha" name="senha"><br><br>
+            <button id="bt_cadastrar" onclick="enviar_cadastro()">Cadastrar</button>
+        </form>
+
+
+
+    <h2>Login</h2>
+    <form method="POST" action="/chat">
+        <label for="telefone">Telefone:</label><br>
+        <input type="text" id="telefone" name="telefone"><br>
+        <label for="senha">Senha:</label><br>
+        <input type="password" id="senha" name="senha"><br><br>
+        <input type="submit" value="Login">
+    </form>
+    {% if mensagem %}
+        <p>{{ mensagem }}</p>
+    {% endif %}
+  
+
+
+
+
+
+
+
+</body>
+
+
+<script type="text/javascript">
+    function enviar_cadastro(){
+        let dados_cadastro = {
+            nome: $("#nome").val(),
+            telefone: $("#telefone").val(),
+            senha: $("#senha").val()
+        };
+
+        $.ajax({
+            url:'/cadastro',
+            type:'POST',
+            data: JSON.stringify(dados_cadastro),
+            contentType:'application/json',
+            success:function(){
+                $('#resultado').append("CADASTRO EFEITUDADO COM SUCESSO");
+            },
+            error: function(){
+                $('#resultado').append("ERRO AO CADASTRAR");        
+            }
+        })
+    }
+</script>
+
+
+</html>
